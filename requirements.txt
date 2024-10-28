@@ -2,3 +2,5 @@ flet
 pandas
 openpyxl
 requests
+aiohttp
+pyinstaller

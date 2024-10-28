@@ -1,3 +1,4 @@
+import asyncio
 from model import CNPJModel
 
 class CNPJPresenter:
@@ -5,13 +6,14 @@ class CNPJPresenter:
         self.view = view
         self.model = CNPJModel()
 
-    def on_check_clicked(self, e):
+    async def on_check_clicked(self, e):
         cnpj = self.view.cnpj_input.value
         if cnpj:
             # Exibir indicador de carregamento
             self.view.show_loading("Consultando CNPJ...")
             
-            resultado = self.model.consultar_cnpj(cnpj)
+            # Chama a função consultar_cnpj de forma assíncrona
+            resultado = await self.model.consultar_cnpj(cnpj)
             print("Resultado da consulta:", resultado)
             
             # Ocultar indicador de carregamento
@@ -28,7 +30,7 @@ class CNPJPresenter:
         else:
             print("Nenhum CNPJ informado.")
 
-    def on_file_picked(self, e):
+    async def on_file_picked(self, e):
         if e.files:
             for file in e.files:
                 if file.name.endswith(".xlsx"):
@@ -38,7 +40,8 @@ class CNPJPresenter:
                     # Exibir indicador de carregamento
                     self.view.show_loading("Processando arquivo...")
                     
-                    resultados = self.model.processar_xlsx(file_path)
+                    # Chama a função processar_xlsx de forma assíncrona
+                    resultados = await self.model.processar_xlsx(file_path)
                     print("Resultados das consultas em lote:", resultados)
                     
                     # Ocultar indicador de carregamento
@@ -53,3 +56,11 @@ class CNPJPresenter:
                         print("Nenhum resultado para salvar.")
                 else:
                     print(f"Arquivo não suportado: {file.name}")
+
+    def run_on_check_clicked(self, e):
+        # Método para encapsular a chamada assíncrona usando asyncio
+        asyncio.run(self.on_check_clicked(e))
+
+    def run_on_file_picked(self, e):
+        # Método para encapsular a chamada assíncrona usando asyncio
+        asyncio.run(self.on_file_picked(e))
