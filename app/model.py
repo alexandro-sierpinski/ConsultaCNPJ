@@ -11,6 +11,7 @@ class CNPJModel:
     def __init__(self):
         self.service = CNPJService()
         self.pasta_base = os.path.join(self.obter_pasta_documentos(), "Consulta de CNPJ")
+        self.criar_pastas()  # Garante que as pastas sejam criadas ao instanciar a classe
 
     def validar_cnpj(self, cnpj: str) -> bool:
         cnpj = ''.join(filter(str.isdigit, cnpj))
@@ -82,12 +83,15 @@ class CNPJModel:
 
     def criar_pastas(self):
         """Cria a estrutura de pastas necessária."""
-        if not os.path.exists(self.pasta_base):
-            os.makedirs(self.pasta_base)
-        if not os.path.exists(os.path.join(self.pasta_base, "Resultado XLSX")):
-            os.makedirs(os.path.join(self.pasta_base, "Resultado XLSX"))
-        if not os.path.exists(os.path.join(self.pasta_base, "Log de erros de CNPJ")):
-            os.makedirs(os.path.join(self.pasta_base, "Log de erros de CNPJ"))
+        try:
+            if not os.path.exists(self.pasta_base):
+                os.makedirs(self.pasta_base)
+            if not os.path.exists(os.path.join(self.pasta_base, "Resultado XLSX")):
+                os.makedirs(os.path.join(self.pasta_base, "Resultado XLSX"))
+            if not os.path.exists(os.path.join(self.pasta_base, "Log de erros de CNPJ")):
+                os.makedirs(os.path.join(self.pasta_base, "Log de erros de CNPJ"))
+        except Exception as e:
+            print(f"Erro ao criar pastas: {e}")
 
     def salvar_resultados_em_xlsx(self, resultados: List[Dict], nome_arquivo: str):
         """Salva os resultados em um arquivo .xlsx na pasta Documentos."""

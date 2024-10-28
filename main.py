@@ -1,6 +1,6 @@
 import flet as ft
-from view import CNPJView
-from presenter import CNPJPresenter
+from app.view import CNPJView
+from app.presenter import CNPJPresenter
 
 def main(page: ft.Page):
     presenter = CNPJPresenter(None)
